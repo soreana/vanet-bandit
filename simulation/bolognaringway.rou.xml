@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on Wed Jan 28 11:13:05 2015 by SUMO duarouter Version 0.22.0
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/duarouterConfiguration.xsd">
+
+    <input>
+        <net-file value="bologna.net.xml"/>
+        <alternative-files value="bologna_059.rou.alt.xml"/>
+        <weight-files value="dump_059_900.xml"/>
+        <phemlight-path value="./PHEMlight/"/>
+    </input>
+
+    <output>
+        <output-file value="bologna_060.rou.xml"/>
+        <vtype-output value=""/>
+        <exit-times value="false"/>
+    </output>
+
+    <processing>
+        <ignore-errors value="true"/>
+        <max-alternatives value="5"/>
+        <with-taz value="false"/>
+        <routing-algorithm value="dijkstra"/>
+        <weights.expand value="true"/>
+        <gawron.beta value="0.9"/>
+        <gawron.a value="0.5"/>
+        <keep-all-routes value="false"/>
+        <logit value="false"/>
+        <logit.beta value="0.15"/>
+        <logit.gamma value="1"/>
+    </processing>
+
+    <time>
+        <begin value="0"/>
+    </time>
+
+    <report>
+        <verbose value="false"/>
+        <no-warnings value="false"/>
+        <no-step-log value="true"/>
+    </report>
+
+    <random_number>
+        <random value="false"/>
+    </random_number>
+
+</configuration>
+-->
+
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
+    <vehicle id="1" depart="0.00">
+        <route edges="292179033#3"/>
+    </vehicle>
+</routes>

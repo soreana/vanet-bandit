@@ -83,7 +83,7 @@ def topology():
     net.addLink(e5, e6)
 
     net.useExternalProgram(program=sumo, port=8813,
-                           config_file='map.sumocfg')
+                           config_file='bolognaringway.sumo.cfg')
 
     net.plotGraph(max_x=5000, max_y=5000)
 
