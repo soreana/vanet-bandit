@@ -1,0 +1,55 @@
+#!/usr/bin/python
+
+"""Sample file for SUMO
+
+***Requirements***:
+
+sumo
+sumo-gui"""
+
+import os
+
+from mininet.node import Controller
+from mininet.node import OVSSwitch, RemoteController
+from mininet.log import setLogLevel, info
+from mn_wifi.node import UserAP
+from mn_wifi.cli import CLI_wifi
+from mn_wifi.net import Mininet_wifi
+from mn_wifi.sumo.runner import sumo
+from mn_wifi.link import wmediumd
+from mn_wifi.wmediumdConnector import interference
+
+
+def topology():
+
+    "Create a network."
+    net = Mininet_wifi(controller=lambda a: RemoteController( a,ip='127.0.0.1', port=6633 ), accessPoint=UserAP,
+                       link=wmediumd, wmediumd_mode=interference)
+    
+
+
+    e1 = net.addAccessPoint('e1', ssid='vanet-ssid', mac='00:00:00:11:00:01',
+                            mode='g', channel='1', passwd='123456789a',
+                            encrypt='wpa2', position='3279.02,3736.27,0')
+
+    c1 = net.addController('c1', controller=RemoteController, ip='127.0.0.1', port=6633)
+
+    net.useExternalProgram(program=sumo, port=8813,
+                           config_file='bolognaringway.sumo.cfg')
+
+    info("*** Starting network\n")
+    net.build()
+    c1.start()
+    e1.start([c1])
+    
+
+    info("*** Running CLI\n")
+    CLI_wifi(net)
+
+    info("*** Stopping network\n")
+    net.stop()
+
+
+if __name__ == '__main__':
+    setLogLevel('info')
+    topology()
