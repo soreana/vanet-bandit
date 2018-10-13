@@ -39,24 +39,34 @@ def topology():
 
     rsus = []
 
+
     e1 = net.addAccessPoint('e1', ssid='vanet-ssid', mac='00:00:00:11:00:01',
-                            mode='g', channel='1', passwd='123456789a',
-                            encrypt='wpa2', position='3279.02,3736.27,0')
+                            mode='g', channel='1', position='1000,1000,0')
     e2 = net.addAccessPoint('e2', ssid='vanet-ssid', mac='00:00:00:11:00:02',
-                            mode='g', channel='6', passwd='123456789a',
-                            encrypt='wpa2', position='2320.82,3565.75,0')
+                            mode='g', channel='6', position='3000,1000,0')
     e3 = net.addAccessPoint('e3', ssid='vanet-ssid', mac='00:00:00:11:00:03',
-                            mode='g', channel='11', passwd='123456789a',
-                            encrypt='wpa2', position='2806.42,3395.22,0')
+                            mode='g', channel='11', position='5000,1000,0')
+    
     e4 = net.addAccessPoint('e4', ssid='vanet-ssid', mac='00:00:00:11:00:04',
-                            mode='g', channel='1', passwd='123456789a',
-                            encrypt='wpa2', position='3332.62,3253.92,0')
+                            mode='g', channel='1', position='4000,2000,0')
     e5 = net.addAccessPoint('e5', ssid='vanet-ssid', mac='00:00:00:11:00:05',
-                            mode='g', channel='6', passwd='123456789a',
-                            encrypt='wpa2', position='2887.62,2935.61,0')
+                            mode='g', channel='6', position='2000,2000,0')
     e6 = net.addAccessPoint('e6', ssid='vanet-ssid', mac='00:00:00:11:00:06',
-                            mode='g', channel='11', passwd='123456789a',
-                            encrypt='wpa2', position='2351.68,3083.40,0')
+                            mode='g', channel='11', position='0,2000,0')
+
+    e7 = net.addAccessPoint('e7', ssid='vanet-ssid', mac='00:00:00:11:00:07',
+                            mode='g', channel='1', position='1000,3000,0')
+    e8 = net.addAccessPoint('e8', ssid='vanet-ssid', mac='00:00:00:11:00:08',
+                            mode='g', channel='11', position='3000,3000,0')
+    e9 = net.addAccessPoint('e9', ssid='vanet-ssid', mac='00:00:00:11:00:09',
+                            mode='g', channel='6', position='5000,3000,0')
+
+    e10 = net.addAccessPoint('e10', ssid='vanet-ssid', mac='00:00:00:11:00:0a',
+                            mode='g', channel='1', position='4000,4000,0')
+    e11 = net.addAccessPoint('e11', ssid='vanet-ssid', mac='00:00:00:11:00:0b',
+                            mode='g', channel='11', position='2000,4000,0')
+    e12 = net.addAccessPoint('e12', ssid='vanet-ssid', mac='00:00:00:11:00:0c',
+                            mode='g', channel='6', position='0,4000,0')
 
     rsus.append(e1)
     rsus.append(e2)
@@ -64,14 +74,20 @@ def topology():
     rsus.append(e4)
     rsus.append(e5)
     rsus.append(e6)
+    rsus.append(e7)
+    rsus.append(e8)
+    rsus.append(e9)
+    rsus.append(e10)
+    rsus.append(e11)
+    rsus.append(e12)
 
     c1 = net.addController('c1')
 
-    info("*** Setting bgscan\n")
-    net.setBgscan(signal=-45, s_inverval=5, l_interval=10)
+    # info("*** Setting bgscan\n")
+    # net.setBgscan(signal=-45, s_inverval=5, l_interval=10)
 
     info("*** Configuring Propagation Model\n")
-    net.setPropagationModel(model="logDistance", exp=2)
+    net.setPropagationModel(model="logDistance", exp=2.5)
 
     info("*** Configuring wifi nodes\n")
     net.configureWifiNodes()
@@ -81,11 +97,20 @@ def topology():
     net.addLink(e3, e4)
     net.addLink(e4, e5)
     net.addLink(e5, e6)
+    net.addLink(e6, e7)
+    net.addLink(e7, e8)
+    net.addLink(e8, e9)
+    net.addLink(e8, e9)
+    net.addLink(e9, e10)
+    net.addLink(e10, e11)
+    net.addLink(e11, e12)
 
     net.useExternalProgram(program=sumo, port=8813,
                            config_file='bolognaringway.sumo.cfg')
 
     net.plotGraph(max_x=5000, max_y=5000)
+
+    # net.startMobility(time=0)
 
     info("*** Starting network\n")
     net.build()
@@ -96,6 +121,12 @@ def topology():
     e4.start([c1])
     e5.start([c1])
     e6.start([c1])
+    e7.start([c1])
+    e8.start([c1])
+    e9.start([c1])
+    e10.start([c1])
+    e11.start([c1])
+    e12.start([c1])
 
 
     i = 201
@@ -143,6 +174,8 @@ def topology():
     info("*** Stopping network\n")
     t.stop_intervals()
     net.stop()
+    os.system("sudo mn -c")
+    os.system("sudo ps -aux | sudo grep sumo-gui | sudo awk '{print $2}' | sudo head -n 1 | sudo xargs kill")
 
 def show_cars_positions(args):
     tmp = None
@@ -152,7 +185,7 @@ def show_cars_positions(args):
         print ("%s associated to %s" % (car.name,car.params['associatedTo']))
         for rsu in args["rsus"]:
             tmp += " from %s is %s" % (rsu.name ,rsu.get_distance_to(car))
-        print (tmp)
+        # print (tmp)
     print ("*********************************************************")
 
 if __name__ == '__main__':
