@@ -139,7 +139,8 @@ def topology():
     j = 2
     for car in cars:
         car.setIP('192.168.0.%s/24' % i, intf='%s-wlan0' % car)
-        car.setIP('192.168.1.%s/24' % i, intf='%s-eth1' % car)
+        # previousely was car.setIP('192.168.1.%s/24' % i, intf='%s-eth1' % car)
+        car.setIP('192.168.1.%s/24' % j, intf='%s-eth1' % car)
         car.cmd('ip route add 10.0.0.0/8 via 192.168.1.%s' % j)
         i += 2
         j += 2
@@ -165,14 +166,14 @@ def topology():
             i += 1
             j += 2
 
-    t = timer.MyTimer(interval)
-    t.set_interval(show_cars_positions,{"cars":cars,"rsus":rsus})
+    # t = timer.MyTimer(interval)
+    # t.set_interval(show_cars_positions,{"cars":cars,"rsus":rsus})
 
     info("*** Running CLI\n")
     CLI_wifi(net)
 
     info("*** Stopping network\n")
-    t.stop_intervals()
+    # t.stop_intervals()
     net.stop()
     os.system("sudo mn -c")
     os.system("sudo ps -aux | sudo grep sumo-gui | sudo awk '{print $2}' | sudo head -n 1 | sudo xargs kill")
@@ -185,7 +186,7 @@ def show_cars_positions(args):
         print ("%s associated to %s" % (car.name,car.params['associatedTo']))
         for rsu in args["rsus"]:
             tmp += " from %s is %s" % (rsu.name ,rsu.get_distance_to(car))
-        # print (tmp)
+        print (tmp)
     print ("*********************************************************")
 
 if __name__ == '__main__':
