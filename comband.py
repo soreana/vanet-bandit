@@ -16,6 +16,7 @@ class ComBand():
 		self.C = self.gamma / self.CKk
 		self.actions = list(itertools.combinations(K , k))
 		self.oneUdot1UT = []
+		self.mu = -1*gamma*(len(K)-k)/(k*len(K)*(len(K)-1))
 
 		for i in range(0, self.CKk):
 			self.weights.append(1)
@@ -53,7 +54,8 @@ class ComBand():
 
 		l_t = ( self.k - sum(rewards) ) * self.oneU( action ).dot(P_t)
 
-		print(l_t)
+		for i in range(0, self.CKk):
+			self.weights[i] = self.weights[i] * math.exp(self.mu*sum(l_t[0]*self.oneU(self.actions[i])[0]))
 
 
 	def update_probabilities(self):
