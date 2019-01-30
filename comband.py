@@ -6,7 +6,7 @@ from scipy.special import binom
 
 
 class ComBand():
-	def __init__(self,gamma=0.3,K=[1,2,3],k=1):
+	def __init__(self,gamma=0.05,K=[1,2,3],k=1):
 		self.weights = []
 		self.probs = []
 		self.gamma = gamma
@@ -14,7 +14,7 @@ class ComBand():
 		self.K = K
 		self.CKk = int(binom(len(K),k))
 		self.C = self.gamma / self.CKk
-		self.actions = list(itertools.combinations(K , k))
+		self.actions = np.asarray(list(itertools.combinations(K , k)))
 		self.oneUdot1UT = []
 		self.mu = -1*gamma*(len(K)-k)/(k*len(K)*(len(K)-1))
 
@@ -38,10 +38,11 @@ class ComBand():
 	def info(self):
 		print ("weights are : ")
 		for i in range(0,len(self.weights)) :
-			print ("weight %d = %f and prob = %f for action -> %s" % (i,self.weights[i], self.probs[i], self.actions[i]) )
+			print ("weight %d = %f , prob = %f and reward = %d for action -> %s " % (i,self.weights[i], self.probs[i], sum(self.actions[i]), self.actions[i]) )
 
 	def next_action(self):
-		return self.actions[random.choices(range(0,self.CKk),weights=self.probs)[0]]
+		index = random.choices(range(0,self.CKk),weights=self.probs)[0]
+		return self.actions[index], index
 
 	def update_weights(self,rewards,action):
 		if ( len(rewards) != self.k ):
