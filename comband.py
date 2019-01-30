@@ -1,4 +1,5 @@
 import random
+import itertools
 
 class ComBand():
 	def __init__(self,gamma=0.3,K=[1,2,3],k=1):
@@ -10,29 +11,27 @@ class ComBand():
 		self.CKk = choose(len(K),k)
 		self.C = self.gamma / self.CKk
 		self.prob_updated = False
+		self.actions = list(itertools.combinations(K , 2))
 
 		for i in range(0, self.CKk):
 			self.weights.append(1)
-			self.probs.append(0)
+			self.probs.append(1/self.CKk)
 
 
 	def info(self):
 		print ("weights are : ")
 		for i in range(0,len(self.weights)) :
-			print ("weight %d = %f , prob = %f" % (i,self.weights[i], self.probs[i]) )
+			print ("weight %d = %f and prob = %f for action -> %s" % (i,self.weights[i], self.probs[i], self.actions[i]) )
 
 	def next_actions(self):
 		if (not self.prob_updated ):
 			update_probabilities()
-		actions = []
-		while ( len(actions) < self.k):
-			actions = actions + random.choices(range(0,self.CKk),weights=self.probs,k=self.k-len(actions))
-			print(actions)
-			actions = list(set(actions))
 
+		action_index = random.choices(range(0,self.CKk),weights=self.probs)
+		print(action_index)
 		self.prob_updated = False
-		self.actions = actions
-		return actions
+
+		return self.actions[action_index[0]]
 
 	def receive_rewards(self,rewards):
 		if ( len(rewards) != len(self.actions) ):
