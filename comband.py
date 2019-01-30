@@ -1,5 +1,6 @@
 import random
 import itertools
+import numpy as np
 
 class ComBand():
 	def __init__(self,gamma=0.3,K=[1,2,3],k=1):
@@ -8,14 +9,25 @@ class ComBand():
 		self.actions = []
 		self.gamma = gamma
 		self.k = k
+		self.K = K
 		self.CKk = choose(len(K),k)
 		self.C = self.gamma / self.CKk
 		self.prob_updated = False
-		self.actions = list(itertools.combinations(K , 2))
+		self.actions = list(itertools.combinations(K , k))
+		self.oneUdot1UT = []
+
 
 		for i in range(0, self.CKk):
 			self.weights.append(1)
 			self.probs.append(1/self.CKk)
+
+		# generate 1U.1U^T
+		for action in self.actions:
+			tmp= np.zeros((len(self.K)), dtype=int)[np.newaxis]
+			for i in action:
+				tmp[0][self.K.index(i)] = 1
+
+			self.oneUdot1UT.append(tmp.transpose().dot(tmp))
 
 
 	def info(self):
@@ -33,9 +45,11 @@ class ComBand():
 
 		return self.actions[action_index[0]]
 
-	def receive_rewards(self,rewards):
-		if ( len(rewards) != len(self.actions) ):
+	def update_weights(self,rewards):
+		if ( len(rewards) != len(self.k) ):
 			raise Exception('rewards list size should be same as actions list size.')
+
+		P_t = np.zeros( (self.K, self.K) )
 
 
 	def update_probabilities(self):
