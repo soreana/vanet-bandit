@@ -24,7 +24,7 @@ class FilePlacement :
                 files_in_cache.append(self.get_new_random_file(files_in_cache))
             self.caches.append(files_in_cache)
 
-    def get_new_random_file(self,arr):
+    def get_new_random_file(self,arr=[]):
         new_file_num = randint(1, self.number_of_files)
         while new_file_num in arr:
             new_file_num = randint(1, self.number_of_files)
