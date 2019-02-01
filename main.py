@@ -3,6 +3,7 @@ import requests as req
 import timer
 import time
 import comband
+import hedge
 import random
 import numpy as np
 #import itertools
@@ -12,6 +13,23 @@ import numpy as np
 # X = fp.FilePlacement()
 
 #X.show_all()
+
+hg = hedge.Hedge(epsilon=0.1,N=5)
+
+hg.info()
+total = np.zeros(hg.N, dtype=int)
+
+rewards=[0.1,0.2,0.3,0.4,0.5]
+
+for i in range(1,7000):
+	action = hg.next_action()
+	total[action] += 1
+	hg.update_weights(rewards=rewards)
+
+hg.info()
+print (total)
+
+exit(0)
 
 cb = comband.ComBand(K=[1,2,3,4,5,6],k=2)
 a = [6207, 6254, 6285, 6512, 6680, 6247, 6436, 6694, 6922, 6698, 6770, 7006, 6970, 7073,7246]
